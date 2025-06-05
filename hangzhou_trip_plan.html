@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>杭州一日游出行计划</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', '微软雅黑', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header .date {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .timeline {
+            position: relative;
+            padding: 20px 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 30px;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(to bottom, #4CAF50, #2196F3, #FF9800, #9C27B0);
+            border-radius: 2px;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 30px;
+            padding-left: 80px;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 22px;
+            top: 0;
+            width: 16px;
+            height: 16px;
+            background: white;
+            border: 4px solid;
+            border-radius: 50%;
+            z-index: 1;
+        }
+
+        .timeline-item.arrival::before { border-color: #4CAF50; }
+        .timeline-item.transport::before { border-color: #2196F3; }
+        .timeline-item.meal::before { border-color: #FF9800; }
+        .timeline-item.activity::before { border-color: #9C27B0; }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border-left: 5px solid;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+
+        .arrival .card { border-left-color: #4CAF50; }
+        .transport .card { border-left-color: #2196F3; }
+        .meal .card { border-left-color: #FF9800; }
+        .activity .card { border-left-color: #9C27B0; }
+
+        .time-badge {
+            display: inline-block;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .route {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border-left: 4px solid #2196F3;
+        }
+
+        .route-step {
+            display: flex;
+            align-items: center;
+            margin: 8px 0;
+            font-size: 0.95rem;
+        }
+
+        .route-arrow {
+            color: #2196F3;
+            margin: 0 10px;
+            font-weight: bold;
+        }
+
+        .highlight {
+            background: linear-gradient(120deg, #ffeaa7 0%, #fab1a0 100%);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border-left: 4px solid #e17055;
+        }
+
+        .food-info {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 10px 0;
+            border-left: 4px solid #ffc107;
+        }
+
+        .exhibition-list {
+            list-style: none;
+            margin: 15px 0;
+        }
+
+        .exhibition-list li {
+            background: #e3f2fd;
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 8px;
+            border-left: 4px solid #2196F3;
+            position: relative;
+            padding-left: 50px;
+        }
+
+        .exhibition-list li::before {
+            content: '▶';
+            position: absolute;
+            left: 20px;
+            color: #2196F3;
+            font-weight: bold;
+        }
+
+        .emergency-plan {
+            background: #ffebee;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #f44336;
+            margin-top: 15px;
+        }
+
+        .emergency-title {
+            color: #c62828;
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .icon {
+            font-size: 1.2rem;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+
+        .station-info {
+            display: inline-block;
+            background: #e8f5e8;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            color: #2e7d32;
+            margin: 2px;
+        }
+
+        .duration {
+            color: #666;
+            font-size: 0.9rem;
+            font-style: italic;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .timeline-item {
+                padding-left: 60px;
+            }
+            
+            .timeline::before {
+                left: 20px;
+            }
+            
+            .timeline-item::before {
+                left: 12px;
+            }
+        }
+
+        .footer {
+            text-align: center;
+            color: white;
+            margin-top: 40px;
+            padding: 20px;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏛️ 杭州一日游出行计划</h1>
+            <div class="date">📅 精心规划的文化艺术之旅</div>
+        </div>
+
+        <div class="timeline">
+            <!-- 抵达杭州东站 -->
+            <div class="timeline-item arrival">
+                <div class="card">
+                    <div class="time-badge">10:56</div>
+                    <div class="section-title">🚄 抵达杭州东站</div>
+                    <div class="highlight">
+                        <span class="icon">📍</span>地铁入口位于东广场G口（步行5分钟）
+                    </div>
+                </div>
+            </div>
+
+            <!-- 地铁出行 -->
+            <div class="timeline-item transport">
+                <div class="card">
+                    <div class="time-badge">11:01 - 11:35</div>
+                    <div class="section-title">🚇 地铁出行</div>
+                    
+                    <div class="route">
+                        <div class="route-step">
+                            <span class="station-info">杭州东站G口</span>
+                            <span class="route-arrow">▶</span>
+                            <strong>地铁19号线（苕溪方向）</strong>
+                        </div>
+                        <div class="duration">乘坐5站（12分钟）至西湖文化广场</div>
+                        
+                        <div class="route-step" style="margin-top: 10px;">
+                            <span class="station-info">站内换乘</span>
+                            <span class="route-arrow">▶</span>
+                            <strong>地铁1号线（湘湖方向）</strong>
+                        </div>
+                        <div class="duration">乘坐2站（4分钟）至龙翔桥C口出站</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 午餐安排 -->
+            <div class="timeline-item meal">
+                <div class="card">
+                    <div class="time-badge">11:35 - 12:20</div>
+                    <div class="section-title">🍜 午餐安排</div>
+                    
+                    <div class="food-info">
+                        <div style="font-weight: bold; font-size: 1.1rem; margin-bottom: 10px;">
+                            📍 知味观·味庄（杨公堤店）
+                        </div>
+                        <div style="margin: 8px 0;">
+                            <span class="icon">🚴</span>龙翔桥站C口出站后骑行8分钟
+                        </div>
+                        <div style="margin: 8px 0;">
+                            <span class="icon">🥢</span>杭帮菜经典：猫耳朵、片儿川
+                        </div>
+                        <div style="margin: 8px 0;">
+                            <span class="icon">💰</span>人均：¥60（可手机取号）
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 前往美术馆 -->
+            <div class="timeline-item transport">
+                <div class="card">
+                    <div class="time-badge">12:20 - 12:50</div>
+                    <div class="section-title">🚌 前往美术馆</div>
+                    
+                    <div class="route">
+                        <div class="route-step">
+                            <span class="station-info">龙翔桥站A口</span>
+                            <span class="route-arrow">▶</span>
+                            <strong>公交4路/12路</strong>
+                        </div>
+                        <div class="duration">乘坐3站（8分钟）至钱王祠站</div>
+                        <div class="route-step" style="margin-top: 10px;">
+                            <span class="icon">🚶</span>步行300米（4分钟）到达美术馆南门
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 参观时段 -->
+            <div class="timeline-item activity">
+                <div class="card">
+                    <div class="time-badge">13:00 - 16:15</div>
+                    <div class="section-title">🎨 参观时段优化</div>
+                    
+                    <div class="highlight">
+                        <span class="icon">🥽</span>新增服务：馆内提供AR导览（押金¥200可退）
+                    </div>
+                    
+                    <div style="margin: 20px 0;">
+                        <strong style="color: #9C27B0;">重点展区：</strong>
+                        <ul class="exhibition-list">
+                            <li>10号厅「宋韵今辉」特展<span class="duration">（13:00-14:30）</span></li>
+                            <li>3F露天观景台茶歇<span class="duration">（14:30-15:00）</span></li>
+                            <li>5号厅「纤维艺术三年展」<span class="duration">（15:00-16:15）</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 返程保障 -->
+            <div class="timeline-item transport">
+                <div class="card">
+                    <div class="time-badge">16:15 - 17:00</div>
+                    <div class="section-title">🔄 返程保障方案</div>
+                    
+                    <div class="route">
+                        <div class="route-step">
+                            <span class="station-info">美术馆北门</span>
+                            <span class="route-arrow">▶</span>
+                            步行450米至吴山广场站D口（6分钟）
+                        </div>
+                        <div class="route-step">
+                            <span class="station-info">地铁7号线（江东二路方向）</span>
+                            <span class="route-arrow">▶</span>
+                            市民中心站换乘4号线
+                        </div>
+                        <div class="route-step">
+                            <span class="station-info">杭州东站方向</span>
+                            <span class="route-arrow">▶</span>
+                            全程22分钟（含换乘）
+                        </div>
+                    </div>
+
+                    <div class="emergency-plan">
+                        <div class="emergency-title">⚠️ 极端情况预案：</div>
+                        <div style="margin: 10px 0;">
+                            <strong>16:30仍未上地铁时：</strong>
+                        </div>
+                        <div style="margin: 8px 0;">
+                            <span class="icon">🚌</span>乘坐公交28路（火车东站西方向）直达
+                        </div>
+                        <div style="margin: 8px 0;">
+                            <span class="icon">⏰</span>发车间隔8分钟，乘车时间35分钟
+                        </div>
+                        <div style="margin: 8px 0;">
+                            <span class="icon">📱</span>使用「杭州公交」APP查看实时到站
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <div>🌟 祝您杭州之旅愉快！🌟</div>
+            <div style="font-size: 0.9rem; margin-top: 10px;">
+                记得提前下载相关APP，准备好交通卡或移动支付
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 添加一些简单的交互效果
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.card');
+            
+            // 给卡片添加点击展开效果
+            cards.forEach(card => {
+                card.addEventListener('click', function() {
+                    this.style.transform = this.style.transform === 'scale(1.02)' ? 'scale(1)' : 'scale(1.02)';
+                });
+            });
+
+            // 添加滚动动画
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            });
+
+            const timelineItems = document.querySelectorAll('.timeline-item');
+            timelineItems.forEach(item => {
+                item.style.opacity = '0';
+                item.style.transform = 'translateY(30px)';
+                item.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(item);
+            });
+        });
+    </script>
+</body>
+</html>
